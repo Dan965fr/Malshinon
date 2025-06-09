@@ -96,10 +96,7 @@ namespace Malshinon.DAL
             }
 
         }
-        public static string GetSecretCode()
-        {
-            return Guid.NewGuid().ToString();
-        }
+        
 
 
 

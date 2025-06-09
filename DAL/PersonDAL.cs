@@ -23,7 +23,7 @@ namespace Malshinon.DAL
                 using (MySqlConnection conn = new MySqlConnection(_connStr))
                 {
                     conn.Open();
-                    string query = "SELECT * FROM person WHERE FirstName = @FirstName AND LastName = @LastName";
+                    string query = "SELECT * FROM people WHERE FirstName = @FirstName AND LastName = @LastName";
 
                     using (MySqlCommand cmd = new MySqlCommand(query, conn))
                     {
@@ -96,7 +96,58 @@ namespace Malshinon.DAL
             }
 
         }
-        
+        public void IncrementReports(int personId)
+        {
+            UpdateCounter(personId, "num_reports");
+            
+        }
+        public void IncrementMentions(int personId)
+        {
+            UpdateCounter(personId, "num_mentions");
+        }
+        public void UpdateType(int personId, string newType)
+        {
+            try
+            {
+                using (MySqlConnection conn = new MySqlConnection(_connStr))
+                {
+                    conn.Open();
+                    string query = "UPDATE people SET Type = @NewType WHERE Id = @PersonId";
+                    using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@NewType", newType);
+                        cmd.Parameters.AddWithValue("@PersonId", personId);
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error updating type: {ex.Message}");
+            }
+        }
+        private void UpdateCounter(int personId, string columnName)
+        {
+            try
+            {
+                using (MySqlConnection conn = new MySqlConnection(_connStr))
+                {
+                    conn.Open();
+                    string query = $"UPDATE people SET {columnName} = {columnName} + 1 WHERE Id = @PersonId";
+                    using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@PersonId", personId);
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error updating counter: {ex.Message}");
+            }
+        }
+
+
 
 
 

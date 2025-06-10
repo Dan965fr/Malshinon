@@ -6,7 +6,13 @@ using System.Threading.Tasks;
 
 namespace Malshinon.Utils
 {
-    internal class SecretCodeGenerator
+    internal static class SecretCodeGenerator
     {
+        public static string GenerateSecretCode()
+        {
+            return Guid.NewGuid().ToString("N").Substring(0, 8);
+        }
+
+
     }
 }

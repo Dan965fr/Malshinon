@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Malshinon.Mdels;
+using Malshinon.Models;
 using MySql.Data.MySqlClient;
 
 namespace Malshinon.DAL
@@ -16,7 +16,7 @@ namespace Malshinon.DAL
         {
             //constractor
         }
-        public Person? GetFullName(string firstName, string lastName)
+        public Person GetFullName(string firstName, string lastName)
         {
             try
             {

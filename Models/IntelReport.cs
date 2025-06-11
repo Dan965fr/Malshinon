@@ -9,8 +9,8 @@ namespace Malshinon.Models
     internal class IntelReport
     {
         public int Id { get; set; }
-        public string ReportId { get; set; }
-        public string TargetId { get; set; }
+        public int ReporterId { get; set; }
+        public int TargetId { get; set; }
         public string Text { get; set; }
         public DateTime Timestamp { get; set; }
 

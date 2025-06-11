@@ -11,7 +11,7 @@ namespace Malshinon.DAL
 {
     internal class PersonDAL
     {
-        private readonly string _connStr = "Server=localhost;user=root;database=malshinon;password";
+        private readonly string _connStr = "Server=localhost;user=root;database=malshinon;password=;";
         public PersonDAL()
         {
             //constractor
@@ -23,12 +23,12 @@ namespace Malshinon.DAL
                 using (MySqlConnection conn = new MySqlConnection(_connStr))
                 {
                     conn.Open();
-                    string query = "SELECT * FROM people WHERE FirstName = @FirstName AND LastName = @LastName";
+                    string query = "SELECT * FROM people WHERE first_name = @FirstName AND last_name = @LastName";
 
                     using (MySqlCommand cmd = new MySqlCommand(query, conn))
                     {
-                        cmd.Parameters.AddWithValue("@firstName", firstName);
-                        cmd.Parameters.AddWithValue("@lastName", lastName);
+                        cmd.Parameters.AddWithValue("@FirstName", firstName);
+                        cmd.Parameters.AddWithValue("@LastName", lastName);
 
                         using (MySqlDataReader reader = cmd.ExecuteReader())
                         {
@@ -37,12 +37,12 @@ namespace Malshinon.DAL
                                 return new Person
                                 {
                                     Id = reader.GetInt32("Id"),
-                                    FirstName = reader.GetString("FirstName"),
-                                    LastName = reader.GetString("LastName"),
-                                    SecretCode = reader.GetString("SecretCode"),
-                                    Type = reader.GetString("Type"),
-                                    NumReports = reader.GetInt32("NumReports"),
-                                    NumMentions = reader.GetInt32("NumMentions")
+                                    FirstName = reader.GetString("first_name"),
+                                    LastName = reader.GetString("last_name"),
+                                    SecretCode = reader.GetString("secret_code"),
+                                    Type = reader.GetString("type"),
+                                    NumReporters = reader.GetInt32("num_reporters"),
+                                    NumMentions = reader.GetInt32("num_mentions")
 
                                 };
 
@@ -67,44 +67,101 @@ namespace Malshinon.DAL
 
 
         }
-        public bool AddPerson(Person person)
+        public int AddPerson(Person person)
         {
             try
             {
                 using(MySqlConnection conn = new MySqlConnection(_connStr))
                 {
                     conn.Open();
-                    string query = "INSERT INTO people (first_Name,last_Name,SecretCode,type,num_Reports,num_Mentions) VALUES(@FirstName, @LastName, @SecretCode, @Type, @NumReports, @NumMentions)";
+                    Console.WriteLine("Attempting to add person:");
+                    Console.WriteLine($"FirstName: {person.FirstName}");
+                    Console.WriteLine($"LastName: {person.LastName}");
+                    Console.WriteLine($"SecretCode: {person.SecretCode}");
+                    Console.WriteLine($"Type: {person.Type}");
+                    Console.WriteLine($"NumReports: {person.NumReporters}");
+                    Console.WriteLine($"NumMentions: {person.NumMentions}");
+                    string query = "INSERT INTO people (first_name,last_name,secret_code,type,num_reporters,num_mentions) VALUES(@FirstName, @LastName, @SecretCode, @Type, @NumReports, @NumMentions)";
                     using (MySqlCommand cmd = new MySqlCommand(query, conn))
                     {
                         cmd.Parameters.AddWithValue("@FirstName", person.FirstName);
                         cmd.Parameters.AddWithValue("@LastName", person.LastName);
                         cmd.Parameters.AddWithValue("@SecretCode", person.SecretCode);
                         cmd.Parameters.AddWithValue("@Type", person.Type);
-                        cmd.Parameters.AddWithValue("@NumReports", person.NumReports);
+                        cmd.Parameters.AddWithValue("@NumReports", person.NumReporters);
                         cmd.Parameters.AddWithValue("@NumMentions", person.NumMentions);
-                        int rowsAffected = cmd.ExecuteNonQuery();
-                        return rowsAffected > 0; // Returns true if the insert was successful
+                        cmd.ExecuteNonQuery();
+                        return (int)cmd.LastInsertedId; // Return the ID of the newly added person
                     }
 
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error adding person: {ex.Message}");
-                return false; // Return false if there was an error
+                Console.WriteLine($"Error adding person: {ex.ToString()}");
+                return -1; // Return -1 to indicate failure
             }
 
         }
         public void IncrementReports(int personId)
         {
-            UpdateCounter(personId, "num_reports");
+            UpdateCounter(personId, "num_reporters");
             
         }
         public void IncrementMentions(int personId)
         {
             UpdateCounter(personId, "num_mentions");
         }
+
+
+        public int GetNumReports(int personId)
+        {
+            try
+            {
+                using (MySqlConnection conn = new MySqlConnection(_connStr))
+                {
+                    conn.Open();
+                    string query = "SELECT num_reporters FROM people WHERE Id = @PersonId";
+                    using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@PersonId", personId);
+                        object result = cmd.ExecuteScalar();
+                        return result != DBNull.Value ? Convert.ToInt32(result) : 0;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error retrieving number of reports: {ex.Message}");
+                return 0;
+            }
+        }
+
+
+        public int GetNumMentions(int personId)
+        {
+            try
+            {
+                using (MySqlConnection conn = new MySqlConnection(_connStr))
+                {
+                    conn.Open();
+                    string query = "SELECT num_mentions FROM people WHERE Id = @PersonId";
+                    using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@PersonId", personId);
+                        object result = cmd.ExecuteScalar();
+                        return result != DBNull.Value ? Convert.ToInt32(result) : 0;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error retrieving number of mentions: {ex.Message}");
+                return 0;
+            }
+        }
+
+
         public void UpdateType(int personId, string newType)
         {
             try

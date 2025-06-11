@@ -14,21 +14,25 @@ namespace Malshinon
     {
         static void Main(string[] args)
         {
-            PersonDAL dal = new PersonDAL();
-            Person person = PersonIdentification.Identification(dal);
+            PersonDAL personDal = new PersonDAL();
+            Person reporter = PersonIdentification.Identification(personDal);
 
-            if(person == null)
+            if (reporter == null)
             {
-                Console.WriteLine("Person identification failed.");
+                Console.WriteLine("Failed to identify reporter.");
                 return;
             }
 
-
-
-
-
+            IntelReportManager manager = new IntelReportManager();
+            manager.SubmitIntel(reporter);
         }
 
 
+
+
+
     }
+
+
+    
 }

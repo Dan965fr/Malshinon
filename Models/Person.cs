@@ -13,7 +13,7 @@ namespace Malshinon.Models
         public string LastName { get; set; }
         public string SecretCode { get; set; }
         public string Type { get; set; } = "reporter"; // Default type is "reporter"
-        public int NumReports { get; set; }
+        public int NumReporters { get; set; }
         public int NumMentions { get; set; }
 
        public string  FullName => $"{FirstName} {LastName}";

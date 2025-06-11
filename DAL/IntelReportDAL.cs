@@ -10,10 +10,11 @@ namespace Malshinon.DAL
 {
     internal class IntelReportDAL
     {
-        private readonly string _connStr = "Server=localhost;user=root;database=malshinon;password";
+        private readonly string _connStr = "Server=localhost;user=root;database=malshinon;password=;";
         public IntelReportDAL()
         {
             // Constructor
+
         }
         public IntelReport GetReportById(string reportId)
         {

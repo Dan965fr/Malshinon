@@ -95,10 +95,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DAL\AlertDAL.cs" />
     <Compile Include="DAL\IntelReportDAL.cs" />
     <Compile Include="DAL\PersonDAL.cs" />
     <Compile Include="Logic\IntelReportManager.cs" />
     <Compile Include="Logic\PersonIdentification.cs" />
+    <Compile Include="Models\Alert.cs" />
     <Compile Include="Models\IntelReport.cs" />
     <Compile Include="Models\Person.cs" />
     <Compile Include="Program.cs" />

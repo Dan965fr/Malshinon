@@ -111,5 +111,20 @@ namespace Malshinon.Logic
             }
 
         }
+        public void IdentifyDangerousTargets()
+        {
+            var targets = _personDAL.GetAllTargets();
+
+            Console.WriteLine("\n Dangerous Targets");
+            foreach (var target in targets)
+            {
+                if (target.NumMentions >= 20) 
+                {
+                    Console.WriteLine($"{target.FirstName} {target.LastName} - Mentions: {target.NumMentions}");
+                }
+            }
+
+        }
+
     }
 }

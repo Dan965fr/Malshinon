@@ -204,6 +204,43 @@ namespace Malshinon.DAL
             }
         }
 
+        public List<Person> GetAllTargets()
+        {
+            List<Person> targets = new List<Person>();
+
+            using (MySqlConnection conn = new MySqlConnection(_connStr))
+            {
+                conn.Open();
+                string query = "SELECT * FROM people WHERE type = 'target' OR type = 'both'";
+
+                using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        targets.Add(new Person
+                        {
+                            Id = reader.GetInt32("id"),
+                            FirstName = reader.GetString("first_name"),
+                            LastName = reader.GetString("last_name"),
+                            SecretCode = reader.GetString("secret_code"),
+                            Type = reader.GetString("type"),
+                            NumReporters = reader.GetInt32("num_reporters"),
+                            NumMentions = reader.GetInt32("num_mentions")
+                        });
+                    }
+                }
+            }
+
+            return targets;
+        }
+
+
+
+
+
+
+
 
 
 
